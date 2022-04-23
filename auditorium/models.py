@@ -25,7 +25,10 @@ class Seat(models.Model):
     ]
 
     row = models.CharField(choices=ROW_CHOICES, max_length=1)
-    number = models.PositiveIntegerField(validators=[MinValueValidator(1), MaxValueValidator(14)])
+    number = models.PositiveIntegerField(validators=
+                                        [MinValueValidator(1),
+                                        MaxValueValidator(14)]
+                                        )
 
     def __str__(self):
         return f'{self.row}{self.number}'
@@ -35,6 +38,3 @@ class Screening(models.Model):
     movie = models.ForeignKey(Movie, on_delete=models.DO_NOTHING)
     auditorium = models.ForeignKey(Auditorium, on_delete=models.DO_NOTHING)
     screening_start = models.DateTimeField()
-
-    def __str__(self):
-        return self.movie

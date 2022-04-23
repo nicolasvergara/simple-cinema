@@ -7,9 +7,10 @@ class Movie(models.Model):
     cast = models.CharField(max_length=1024)
     description = models.TextField()
     duration_min = models.PositiveIntegerField()
+    on_billboard = models.BooleanField(default=True)
     date_added = models.DateTimeField(auto_now_add=True)
 
-    def __str__(self) -> str:
+    def __str__(self):
         return self.title
 
     class Meta:
