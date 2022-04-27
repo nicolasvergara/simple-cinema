@@ -9,10 +9,11 @@ class Reservation(models.Model):
     screening = models.ForeignKey(Screening, on_delete=models.DO_NOTHING)
     seat = models.ForeignKey(Seat, on_delete=models.DO_NOTHING)
     paid = models.BooleanField(default=False, null=True)
-    active = models.BooleanField(default=None, null=True)
+    active = models.BooleanField(default=False, null=True)
 
     def __str__(self):
         return f'{self.screening.movie} {self.buyer.first_name} - {self.paid}'
 
     def update_paid_field(self, value):
         self.paid = value
+        self.save(update_fields=['paid'])
