@@ -5,10 +5,10 @@ from django.conf import settings
 from django.db import transaction
 
 from rest_framework.response import Response
-from rest_framework import status
 
 from reservation.models import Reservation
 from reservation.selectors import reservation_available
+from reservation import errors
 from account.models import UserAccount
 from auditorium.models import Screening, Seat
 
@@ -24,9 +24,9 @@ def reservation_create(
 
     screening = get_object_or_404(Screening, id=screening_id)
     seat = get_object_or_404(Seat, id=seat_id)
-    is_avatible = reservation_available(screening.id, seat.id)
+    is_reserved = reservation_available(screening.id, seat.id)
 
-    if is_avatible:
+    if not is_reserved:
         charge = create_charge()
         if charge.paid:
             reservation = Reservation.objects.create(
@@ -36,9 +36,10 @@ def reservation_create(
                 paid=paid,
                 active=active
             )
-            return Response ({"id": reservation.id}, status=status.HTTP_201_CREATED)
-    return Response ({"message": "The seat selected is unavailable."},
-                    status=status.HTTP_503_SERVICE_UNAVAILABLE)
+            return Response ({"id": reservation.id,
+                            "paid": reservation.paid
+            })          
+    raise errors.trigger_seat_unavailable_detail()
 
 def create_charge():
     """ ***DUMMY CHARGE 🤷‍♂️*** """
