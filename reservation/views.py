@@ -3,7 +3,6 @@ from rest_framework import serializers
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication
 from rest_framework.permissions import IsAuthenticated
 
-from auditorium.models import Screening, Seat
 from reservation.services import reservation_create
 
 
